@@ -5,8 +5,8 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>pt.isec.angelopaiva.jovo</groupId>
-    <artifactId>my-project</artifactId>
+    <groupId>pt.isec.angelopaiva.jogo</groupId>
+    <artifactId>4-em-linha</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -17,11 +17,14 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.0</version>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
                 <configuration>
-                    <mainClass>pt.isec.angelopaiva.jogo.JogoAppCLI</mainClass>
+                    <archive>
+                        <manifest>
+                            <mainClass>pt.isec.angelopaiva.jogo.JogoAppCLI</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>
@@ -29,10 +32,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-            <scope>test</scope>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
