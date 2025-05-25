@@ -16,7 +16,10 @@ import static pt.isec.angelopaiva.jogo.logica.dados.Jogo.NR_COLUMNS;
 
 public class JogoTest {
 
-    Jogo jogo;
+    /*
+    * Control flow testing on win condition
+    */
+    private Jogo jogo;
 
     @BeforeEach
     void setUp() {
@@ -31,6 +34,13 @@ public class JogoTest {
 
     @Test
     public void testHorizontalWinCondition() {
+        /*
+         . . . . . . .
+         . . . . . . .
+         . . . . . . .
+         . . . . . . .
+         X X X X . . .
+        */
         for (int i = 0; i < 4; i++) {
             jogo.placePieceOnColumn(i);
         }
@@ -43,6 +53,13 @@ public class JogoTest {
 
     @Test
     public void testVerticalWinCondition() {
+        /*
+         . . . . . . .
+         X . . . . . .
+         X . . . . . .
+         X . . . . . .
+         X . . . . . .
+        */
         for (int i = 0; i < 4; i++) {
             jogo.placePieceOnColumn(0);
         }
@@ -54,19 +71,76 @@ public class JogoTest {
     }
 
     @Test
-    public void testRightToLeftDiagonalWinCondition() {
-        // Arrange, Act, Assert
-        assertEquals(2, 1 + 1);
+    public void testAscendingDiagonalWinCondition() {
+        /*
+         . . . . . . .
+         . . . X . . .
+         . . X O . . .
+         . X O O . . .
+         X O O O . . .
+        */
+
+        for (int i = 0; i < 4; i++) {
+            // player2 put holding pieces
+            jogo.updateJogo();
+
+            for (int j = 0; j < i; j++) {
+                jogo.placePieceOnColumn(i);
+            }
+
+            jogo.updateJogo();
+            // player1 put pieces in the right spot
+            jogo.placePieceOnColumn(i);
+
+        }
+
+        /* update jogo.getState() */
+        jogo.updateJogo();
+
+        assertEquals(JogoStates.VICTORY_P1, jogo.getState());
     }
 
     @Test
-    public void testLeftToRightDiagonalWinCondition() {
-        // Arrange, Act, Assert
-        assertEquals(2, 1 + 1);
+    public void testDescendingDiagonalWinCondition() {
+        /*
+         . . . . . . .
+         O . . . . . .
+         X O . . . . .
+         X X O . . . .
+         X X X O . . .
+        */
+
+        for (int i = 0; i < 4; i++) {
+            // player2 put holding pieces
+            jogo.updateJogo();
+
+            for (int j = 0; j < 3 - i; j++) {
+                jogo.placePieceOnColumn(i); // Player 1 places support
+            }
+
+            jogo.updateJogo();
+            // player1 put pieces in the right spot
+            jogo.placePieceOnColumn(i);
+        }
+
+
+        System.out.println(jogo.getBoardAsString());
+        /* update jogo.getState() */
+        jogo.updateJogo();
+
+        assertEquals(JogoStates.VICTORY_P1, jogo.getState());
     }
 
     @Test
     public void testDrawCondition() {
+        /*
+         X 0 X 0 X 0 X
+         0 X 0 X 0 X 0
+         0 X 0 X 0 X 0
+         X 0 X O X 0 X
+         X O X O X 0 X
+        */
+
         /* Set the columns with a draw condition game state */
         for (int i = 0; i < Jogo.NR_COLUMNS; i++) {
             List<TypePiece> column = new ArrayList<>();
