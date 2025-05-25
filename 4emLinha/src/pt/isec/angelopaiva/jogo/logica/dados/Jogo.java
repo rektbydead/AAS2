@@ -101,8 +101,12 @@ public class Jogo implements Serializable {
         // j = coluna
         for (int i = 0; i < getNumberBoardRows(); i++) {
             for (int j = 0; j < getNumberBoardColumns() - 3; j++) {
-                if (this.board[i][j] == player && this.board[i][j + 1] == player
-                && this.board[i][j + 2] == player && this.board[i][j + 3] == player) return true;
+                if (
+                        this.board[i][j] == player
+                        && this.board[i][j + 1] == player
+                        && this.board[i][j + 2] == player
+                        && this.board[i][j + 3] == player
+                ) return true;
             }
         }
 
@@ -115,8 +119,12 @@ public class Jogo implements Serializable {
         // j = coluna
         for (int j = 0; j < getNumberBoardColumns(); j++) {
             for (int i = 0; i < getNumberBoardRows() - 3; i++) {
-                if (this.board[i][j] == player && this.board[i + 1][j] == player
-                && this.board[i + 2][j] == player && this.board[i + 3][j] == player) return true;
+                if (
+                        this.board[i][j] == player
+                        && this.board[i + 1][j] == player
+                        && this.board[i + 2][j] == player
+                        && this.board[i + 3][j] == player
+                ) return true;
             }
         }
 

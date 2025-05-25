@@ -52,6 +52,26 @@ public class JogoTest {
     }
 
     @Test
+    public void testUnfinishedWinCondition() {
+        /*
+         . . . . . . .
+         . . . . . . .
+         . . . . . . .
+         . . . . . . .
+         X 0 X 0 . . .
+        */
+        for (int i = 0; i < 4; i++) {
+            jogo.placePieceOnColumn(i);
+            jogo.updateJogo();
+        }
+
+        /* update jogo.getState() */
+        jogo.updateJogo();
+
+        assertEquals(JogoStates.UNFINISHED, jogo.getState());
+    }
+
+    @Test
     public void testVerticalWinCondition() {
         /*
          . . . . . . .
@@ -123,8 +143,6 @@ public class JogoTest {
             jogo.placePieceOnColumn(i);
         }
 
-
-        System.out.println(jogo.getBoardAsString());
         /* update jogo.getState() */
         jogo.updateJogo();
 
