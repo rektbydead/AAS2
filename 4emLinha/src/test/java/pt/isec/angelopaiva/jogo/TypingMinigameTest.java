@@ -9,7 +9,7 @@ import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MathMinigameTest {
+public class TypingMinigameTest {
 
     /*
     * Data flow testing on math minigame setAnswer
@@ -136,7 +136,7 @@ public class MathMinigameTest {
     @Test
     public void testMathMinigameFinishedBecauseTimeout() throws InterruptedException {
         int secondsTimeOut = getMaxSecond(minigame) + 2;
-        Thread.sleep(secondsTimeOut * 1000L);
+        Thread.sleep(Duration.ofSeconds(secondsTimeOut));
 
         String question = minigame.getQuestion();
         double solution = getLastSolution(minigame);
@@ -163,7 +163,7 @@ public class MathMinigameTest {
         for (int i = 0; i < getRequiredNrRightAnswer(minigame); i++) {
             if (i == getRequiredNrRightAnswer(minigame) - 1) {
                 int secondsTimeOut = getMaxSecond(minigame) + 2;
-                Thread.sleep(secondsTimeOut * 1000L);
+                Thread.sleep(Duration.ofSeconds(secondsTimeOut));
             }
 
             String question = minigame.getQuestion();
