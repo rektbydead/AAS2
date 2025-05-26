@@ -11,7 +11,7 @@ import pt.isec.angelopaiva.jogo.logica.dados.players.PlayerHuman;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static pt.isec.angelopaiva.jogo.logica.dados.Jogo.NR_COLUMNS;
 
 public class JogoTest {
@@ -179,5 +179,37 @@ public class JogoTest {
         jogo.updateJogo();
 
         assertEquals(JogoStates.DRAW, jogo.getState());
+    }
+
+    /*
+     * Control flow testing on CanPlacePieceOnColumn
+     */
+    @Test
+    public void testCanPlacePieceOnColumnNegativeIndex() {
+        boolean result = jogo.canPlacePieceOnColumn(-1);
+        assertFalse(result);
+    }
+
+    @Test
+    public void testCanPlacePieceOnColumnIndexTooBig() {
+        boolean result = jogo.canPlacePieceOnColumn(Jogo.NR_COLUMNS + 1);
+        assertFalse(result);
+    }
+
+    @Test
+    public void testCanPlacePieceOnColumnValidColumnButFull() {
+        for (int i = 0; i < Jogo.NR_ROWS; i++) {
+            jogo.placePieceOnColumn(0);
+            jogo.updateCurrentPlayer();
+        }
+
+        boolean result = jogo.canPlacePieceOnColumn(0);
+        assertFalse(result);
+    }
+
+    @Test
+    public void testCanPlacePieceOnColumnValid() {
+        boolean result = jogo.canPlacePieceOnColumn(0);
+        assertTrue(result);
     }
 }
