@@ -1,6 +1,8 @@
 package pt.isec.angelopaiva.jogo.logica.estados;
 
-import pt.isec.angelopaiva.jogo.logica.*;
+import pt.isec.angelopaiva.jogo.logica.AppStates;
+import pt.isec.angelopaiva.jogo.logica.JogoManager;
+import pt.isec.angelopaiva.jogo.logica.JogoStates;
 
 public class Game extends StateAdapter {
     protected Game(JogoManager jogoManager) { super(jogoManager); }

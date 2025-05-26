@@ -1,5 +1,4 @@
-package test;
-
+package pt.isec.angelopaiva.jogo;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static pt.isec.angelopaiva.jogo.logica.dados.Jogo.NR_COLUMNS;
 
 public class JogoTest {
 

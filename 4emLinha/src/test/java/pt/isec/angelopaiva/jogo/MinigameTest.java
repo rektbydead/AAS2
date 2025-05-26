@@ -1,15 +1,9 @@
-package test;
-
+package pt.isec.angelopaiva.jogo;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pt.isec.angelopaiva.jogo.logica.JogoStates;
-import pt.isec.angelopaiva.jogo.logica.TypePiece;
 import pt.isec.angelopaiva.jogo.logica.dados.Jogo;
 import pt.isec.angelopaiva.jogo.logica.dados.players.PlayerHuman;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 

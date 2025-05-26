@@ -1,4 +1,4 @@
-package pt.isec.angelopaiva.jogo.iu.texto;
+package pt.isec.angelopaiva.jogo.texto;
 
 import pt.isec.angelopaiva.jogo.logica.StateMachine;
 import pt.isec.angelopaiva.jogo.logica.dados.players.Player;

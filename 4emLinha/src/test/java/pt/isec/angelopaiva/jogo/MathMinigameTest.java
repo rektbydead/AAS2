@@ -1,11 +1,8 @@
-package test;
-
+package pt.isec.angelopaiva.jogo;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pt.isec.angelopaiva.jogo.logica.dados.Jogo;
 import pt.isec.angelopaiva.jogo.logica.dados.minigames.MathMinigame;
-import pt.isec.angelopaiva.jogo.logica.dados.players.PlayerHuman;
 
 import java.text.DecimalFormat;
 import java.time.Duration;
