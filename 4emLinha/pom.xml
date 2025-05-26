@@ -48,6 +48,27 @@
                 </executions>
             </plugin>
 
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>1.15.0</version>
+                <configuration>
+                    <targetClasses>
+                        <param>pt.isec.angelopaiva.jogo.*</param> <!-- adjust to your package -->
+                    </targetClasses>
+                    <targetTests>
+                        <param>pt.isec.angelopaiva.jogo.*</param> <!-- adjust if needed -->
+                    </targetTests>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-junit5-plugin</artifactId>
+                        <version>1.1.2</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
             <!-- Create runnable jar -->
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>

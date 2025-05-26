@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JogoObservable.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">4-em-linha</a> &gt; <a href="index.source.html" class="el_package">pt.isec.angelopaiva.jogo.logica</a> &gt; <span class="el_source">JogoObservable.java</span></div><h1>JogoObservable.java</h1><pre class="source lang-java linenums">package pt.isec.angelopaiva.jogo.logica;
+
+import pt.isec.angelopaiva.jogo.logica.dados.players.Player;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.io.File;
+
+public class JogoObservable {
+    private final StateMachine sm;
+    private final PropertyChangeSupport propertyChangeSupport;
+
+<span class="nc" id="L13">    public JogoObservable(StateMachine sm) {</span>
+<span class="nc" id="L14">        this.sm = sm;</span>
+<span class="nc" id="L15">        propertyChangeSupport = new PropertyChangeSupport(sm);</span>
+<span class="nc" id="L16">    }</span>
+
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+<span class="nc" id="L19">        propertyChangeSupport.addPropertyChangeListener(propertyName, listener);</span>
+<span class="nc" id="L20">    }</span>
+
+<span class="nc" id="L22">    public AppStates getCurrentState() { return sm.getCurrentState(); }</span>
+
+    //
+    // Methods that fire
+    //
+
+    public void startWaitPlayersNameAndType() {
+<span class="nc" id="L29">        sm.startWaitPlayersNameAndType();</span>
+<span class="nc" id="L30">        propertyChangeSupport.firePropertyChange(Property.PROPERTY_GENERAL.toString(), null, null);</span>
+<span class="nc" id="L31">    }</span>
+
+    public void startMinigameForSpecialPiece() {
+<span class="nc" id="L34">        sm.startMinigameForSpecialPiece();</span>
+
+<span class="nc" id="L36">        propertyChangeSupport.firePropertyChange(Property.PROPERTY_GENERAL.toString(), null, null);</span>
+<span class="nc" id="L37">        propertyChangeSupport.firePropertyChange(Property.PROPERTY_MINIGAME.toString(), null, null);</span>
+<span class="nc" id="L38">    }</span>
+
+    public void goBack() {
+<span class="nc" id="L41">        sm.goBack();</span>
+<span class="nc" id="L42">        propertyChangeSupport.firePropertyChange(Property.PROPERTY_GENERAL.toString(), null, null);</span>
+<span class="nc" id="L43">    }</span>
+
+    public void setPlayers(Player p1, Player p2) {
+<span class="nc" id="L46">        sm.setPlayers(p1, p2);</span>
+<span class="nc" id="L47">        propertyChangeSupport.firePropertyChange(Property.PROPERTY_GENERAL.toString(), null, null);</span>
+<span class="nc" id="L48">        propertyChangeSupport.firePropertyChange(Property.PROPERTY_GAME.toString(), null, null);</span>
+<span class="nc" id="L49">    }</span>
+
+    public boolean placePieceOnColumn(int column, boolean useSpecialPiece) {
+<span class="nc" id="L52">        boolean b = sm.placePieceOnColumn(column, useSpecialPiece);</span>
+
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        if (sm.getCurrentState() != AppStates.GAME) {</span>
+<span class="nc" id="L55">            propertyChangeSupport.firePropertyChange(Property.PROPERTY_GENERAL.toString(), null, null);</span>
+        }
+
+<span class="nc" id="L58">        propertyChangeSupport.firePropertyChange(Property.PROPERTY_GAME.toString(), null, null);</span>
+
+<span class="nc" id="L60">        return b;</span>
+    }
+
+    public void placePieceOnColumnAI() {
+<span class="nc" id="L64">        sm.placePieceOnColumnAI();</span>
+
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (sm.getCurrentState() != AppStates.GAME) {</span>
+<span class="nc" id="L67">            propertyChangeSupport.firePropertyChange(Property.PROPERTY_GENERAL.toString(), null, null);</span>
+        }
+
+<span class="nc" id="L70">        propertyChangeSupport.firePropertyChange(Property.PROPERTY_GAME.toString(), null, null);</span>
+<span class="nc" id="L71">    }</span>
+
+    public void setMinigameAnswer(String answer) {
+<span class="nc" id="L74">        sm.setMinigameAnswer(answer);</span>
+
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (sm.getCurrentState() == AppStates.MINIGAME_FOR_SPECIAL_PIECE) {</span>
+<span class="nc" id="L77">            propertyChangeSupport.firePropertyChange(Property.PROPERTY_MINIGAME.toString(), null, null);</span>
+<span class="nc" id="L78">            return;</span>
+        }
+
+<span class="nc" id="L81">        propertyChangeSupport.firePropertyChange(Property.PROPERTY_GENERAL.toString(), null, null);</span>
+<span class="nc" id="L82">        propertyChangeSupport.firePropertyChange(Property.PROPERTY_GAME.toString(), null, null);</span>
+<span class="nc" id="L83">    }</span>
+
+    public void undoMoves(int nrMoves) {
+<span class="nc" id="L86">        sm.undoMoves(nrMoves);</span>
+<span class="nc" id="L87">        propertyChangeSupport.firePropertyChange(Property.PROPERTY_GAME.toString(), null, null);</span>
+<span class="nc" id="L88">    }</span>
+
+    public void replayMove() {
+<span class="nc" id="L91">        sm.replayMove();</span>
+
+<span class="nc" id="L93">        propertyChangeSupport.firePropertyChange(Property.PROPERTY_REPLAY.toString(), null, null);</span>
+
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        if (sm.getCurrentState() != AppStates.WATCH_REPLAY) {</span>
+<span class="nc" id="L96">            propertyChangeSupport.firePropertyChange(Property.PROPERTY_GENERAL.toString(), null, null);</span>
+        }
+<span class="nc" id="L98">    }</span>
+
+    public boolean loadGameForReplay(File file) {
+<span class="nc" id="L101">        boolean success = sm.loadGameForReplay(file);</span>
+
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        if (success) {</span>
+<span class="nc" id="L104">            propertyChangeSupport.firePropertyChange(Property.PROPERTY_GENERAL.toString(), null, null);</span>
+<span class="nc" id="L105">            propertyChangeSupport.firePropertyChange(Property.PROPERTY_REPLAY.toString(), null, null);</span>
+        }
+
+<span class="nc" id="L108">        return success;</span>
+    }
+
+
+    public boolean loadGame(File file) {
+<span class="nc" id="L113">        boolean success = sm.loadGame(file);</span>
+
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        if (success) {</span>
+<span class="nc" id="L116">            propertyChangeSupport.firePropertyChange(Property.PROPERTY_GENERAL.toString(), null, null);</span>
+<span class="nc" id="L117">            propertyChangeSupport.firePropertyChange(Property.PROPERTY_GAME.toString(), null, null);</span>
+        }
+
+<span class="nc" id="L120">        return success;</span>
+    }
+
+    //
+    // Methods that don't fire
+    //
+
+    // Save Logic
+
+<span class="nc" id="L129">    public void saveGameForSave(File file) { sm.saveGameForSave(file); }</span>
+
+    // Current Player Methods
+
+<span class="nc" id="L133">    public int getCurrentPlayer() { return sm.getCurrentPlayer(); }</span>
+
+<span class="nc" id="L135">    public boolean currentPlayerIsHuman() { return sm.currentPlayerIsHuman(); }</span>
+<span class="nc" id="L136">    public boolean currentPlayerHasSpecialPiece() { return sm.currentPlayerHasSpecialPiece(); }</span>
+<span class="nc" id="L137">    public boolean currentPlayerCanPlayMinigames() { return sm.currentPlayerCanPlayMinigames(); }</span>
+<span class="nc" id="L138">    public int getUndoCreditsFromCurrentPlayer() { return sm.getUndoCreditsFromCurrentPlayer(); }</span>
+
+    // Player Specific Methods
+
+<span class="nc" id="L142">    public String getP1Name() { return sm.getP1Name(); }</span>
+<span class="nc" id="L143">    public boolean p1IsHuman() { return sm.p1IsHuman(); }</span>
+<span class="nc" id="L144">    public int getNumberSpecialPiecesP1() { return sm.getNumberSpecialPiecesP1(); }</span>
+<span class="nc" id="L145">    public int getUndoCreditsP1() { return sm.getUndoCreditsP1(); }</span>
+
+<span class="nc" id="L147">    public String getP2Name() { return sm.getP2Name(); }</span>
+<span class="nc" id="L148">    public boolean p2IsHuman() { return sm.p2IsHuman(); }</span>
+<span class="nc" id="L149">    public int getNumberSpecialPiecesP2() { return sm.getNumberSpecialPiecesP2(); }</span>
+<span class="nc" id="L150">    public int getUndoCreditsP2() { return sm.getUndoCreditsP2(); }</span>
+
+    // Board Methods
+
+<span class="nc" id="L154">    public int getNumberBoardColumns() { return sm.getNumberBoardColumns(); }</span>
+<span class="nc" id="L155">    public int getNumberBoardRows() { return sm.getNumberBoardRows(); }</span>
+<span class="nc" id="L156">    public TypePiece[][] getCopyOfBoard() { return sm.getCopyOfBoard(); }</span>
+
+    // Get Jogo State
+
+<span class="nc" id="L160">    public JogoStates getJogoState() { return sm.getJogoState(); }</span>
+
+    // Minigame Methods
+
+<span class="nc" id="L164">    public String getMinigameWording() { return sm.getMinigameWording(); }</span>
+<span class="nc" id="L165">    public String getMinigameQuestion() { return sm.getMinigameQuestion(); }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

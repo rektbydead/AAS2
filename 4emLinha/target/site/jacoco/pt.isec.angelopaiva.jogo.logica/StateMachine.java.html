@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StateMachine.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">4-em-linha</a> &gt; <a href="index.source.html" class="el_package">pt.isec.angelopaiva.jogo.logica</a> &gt; <span class="el_source">StateMachine.java</span></div><h1>StateMachine.java</h1><pre class="source lang-java linenums">package pt.isec.angelopaiva.jogo.logica;
+
+import pt.isec.angelopaiva.jogo.logica.dados.players.Player;
+import pt.isec.angelopaiva.jogo.logica.estados.ChooseOption;
+import pt.isec.angelopaiva.jogo.logica.estados.IState;
+import pt.isec.angelopaiva.jogo.utils.UtilsFiles;
+
+import java.io.File;
+
+public class StateMachine {
+    private IState current;
+    private JogoManager jogoManager;
+
+<span class="nc" id="L14">    public StateMachine() {</span>
+<span class="nc" id="L15">        this.jogoManager = new JogoManager();</span>
+<span class="nc" id="L16">        this.current = new ChooseOption(jogoManager);</span>
+<span class="nc" id="L17">    }</span>
+
+    //
+    // Depend on state
+    //
+
+<span class="nc" id="L23">    public void startWaitPlayersNameAndType() { current = current.startWaitPlayersNameAndType(); }</span>
+<span class="nc" id="L24">    public void startMinigameForSpecialPiece() { current = current.startMinigameForSpecialPiece(); }</span>
+
+<span class="nc" id="L26">    public void goBack() { current = current.goBack(); }</span>
+
+<span class="nc" id="L28">    public void setPlayers(Player p1, Player p2) { current = current.setPlayers(p1, p2); }</span>
+
+    public boolean placePieceOnColumn(int column, boolean useSpecialPiece) {
+<span class="nc" id="L31">        boolean b = jogoManager.canPlacePieceOnColumn(column);</span>
+
+<span class="nc" id="L33">        current = current.placePieceOnColumn(column, useSpecialPiece);</span>
+
+<span class="nc bnc" id="L35" title="All 2 branches missed.">        if (useSpecialPiece) return true;</span>
+
+<span class="nc" id="L37">        return b;</span>
+    }
+
+<span class="nc" id="L40">    public void placePieceOnColumnAI() { current = current.placePieceOnColumnAI(); }</span>
+
+<span class="nc" id="L42">    public void setMinigameAnswer(String answer) { current = current.setMinigameAnswer(answer); }</span>
+
+<span class="nc" id="L44">    public void undoMoves(int nrMoves) { current = current.undoMoves(nrMoves); }</span>
+
+<span class="nc" id="L46">    public void replayMove() { current = current.replayMove(); }</span>
+
+<span class="nc" id="L48">    public AppStates getCurrentState() { return current.getState(); }</span>
+
+    // Load Logic
+
+    public boolean loadGameForReplay(File file) {
+<span class="nc" id="L53">        JogoManager replayJogoManager = UtilsFiles.loadJogoManagerFromFile(file);</span>
+
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (replayJogoManager == null) return false;</span>
+
+<span class="nc" id="L57">        updateJogoManager(replayJogoManager);</span>
+
+<span class="nc" id="L59">        current = current.startWatchReplay();</span>
+
+<span class="nc" id="L61">        return true;</span>
+    }
+
+    public boolean loadGameForReplay(String fileName) {
+<span class="nc" id="L65">        JogoManager replayJogoManager = UtilsFiles.loadReplayFromFile(fileName);</span>
+
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (replayJogoManager == null) return false;</span>
+
+<span class="nc" id="L69">        updateJogoManager(replayJogoManager);</span>
+
+<span class="nc" id="L71">        current = current.startWatchReplay();</span>
+
+<span class="nc" id="L73">        return true;</span>
+    }
+
+    public boolean loadGame(String fileName) {
+<span class="nc" id="L77">        JogoManager loadedJogoManager = UtilsFiles.loadSaveFromFile(fileName);</span>
+
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if (loadedJogoManager == null) return false;</span>
+
+<span class="nc" id="L81">        updateJogoManager(loadedJogoManager);</span>
+
+<span class="nc" id="L83">        current = current.startGame();</span>
+
+<span class="nc" id="L85">        return true;</span>
+    }
+
+    public boolean loadGame(File file) {
+<span class="nc" id="L89">        JogoManager loadedJogoManager = UtilsFiles.loadJogoManagerFromFile(file);</span>
+
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (loadedJogoManager == null) return false;</span>
+
+<span class="nc" id="L93">        updateJogoManager(loadedJogoManager);</span>
+
+<span class="nc" id="L95">        current = current.startGame();</span>
+
+<span class="nc" id="L97">        return true;</span>
+    }
+
+
+    private void updateJogoManager(JogoManager newJogoManager) {
+<span class="nc" id="L102">        this.jogoManager = newJogoManager;</span>
+<span class="nc" id="L103">        current.setJogoManager(newJogoManager);</span>
+<span class="nc" id="L104">    }</span>
+
+    //
+    // Don't depend on state
+    //
+
+    // Save Logic
+
+<span class="nc" id="L112">    public void saveGameForSave(String saveName) { UtilsFiles.saveGameToSaveFile(jogoManager, saveName); }</span>
+<span class="nc" id="L113">    public void saveGameForSave(File file) { UtilsFiles.saveJogoManagerToFile(jogoManager, file); }</span>
+
+    // Current Player Methods
+
+<span class="nc" id="L117">    public int getCurrentPlayer() { return jogoManager.getCurrentPlayer(); }</span>
+
+<span class="nc" id="L119">    public String getCurrentPlayerName() { return jogoManager.getCurrentPlayerName(); }</span>
+<span class="nc" id="L120">    public boolean currentPlayerIsHuman() { return jogoManager.currentPlayerIsHuman(); }</span>
+<span class="nc" id="L121">    public boolean currentPlayerHasSpecialPiece() { return jogoManager.currentPlayerHasSpecialPiece(); }</span>
+<span class="nc" id="L122">    public boolean currentPlayerCanPlayMinigames() { return jogoManager.currentPlayerCanPlayMinigames(); }</span>
+<span class="nc" id="L123">    public int getUndoCreditsFromCurrentPlayer() { return jogoManager.getUndoCreditsFromCurrentPlayer(); }</span>
+
+    // Player Specific Methods
+
+<span class="nc" id="L127">    public String getP1Name() { return jogoManager.getP1Name(); }</span>
+<span class="nc" id="L128">    public boolean p1IsHuman() { return jogoManager.p1IsHuman(); }</span>
+<span class="nc" id="L129">    public int getNumberSpecialPiecesP1() { return jogoManager.getNumberSpecialPiecesP1(); }</span>
+<span class="nc" id="L130">    public int getUndoCreditsP1() { return jogoManager.getUndoCreditsP1(); }</span>
+
+<span class="nc" id="L132">    public String getP2Name() { return jogoManager.getP2Name(); }</span>
+<span class="nc" id="L133">    public boolean p2IsHuman() { return jogoManager.p2IsHuman(); }</span>
+<span class="nc" id="L134">    public int getNumberSpecialPiecesP2() { return jogoManager.getNumberSpecialPiecesP2(); }</span>
+<span class="nc" id="L135">    public int getUndoCreditsP2() { return jogoManager.getUndoCreditsP2(); }</span>
+
+    // Board Methods
+
+<span class="nc" id="L139">    public int getNumberBoardColumns() { return jogoManager.getNumberBoardColumns(); }</span>
+<span class="nc" id="L140">    public int getNumberBoardRows() { return jogoManager.getNumberBoardRows(); }</span>
+<span class="nc" id="L141">    public String getBoardAsString() { return jogoManager.getBoardAsString(); }</span>
+<span class="nc" id="L142">    public TypePiece[][] getCopyOfBoard() { return jogoManager.getCopyOfBoard(); }</span>
+
+    // Get EndGame Info
+
+<span class="nc" id="L146">    public String getEndGameInfo() { return jogoManager.getEndGameInfo(); }</span>
+
+    // Get Jogo State
+
+<span class="nc" id="L150">    public JogoStates getJogoState() { return jogoManager.getState(); }</span>
+
+    // Minigame Methods
+
+<span class="nc" id="L154">    public String getMinigameWording() { return jogoManager.getMinigameWording(); }</span>
+<span class="nc" id="L155">    public String getMinigameQuestion() { return jogoManager.getMinigameQuestion(); }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

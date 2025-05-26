@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UtilsFiles.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">4-em-linha</a> &gt; <a href="index.source.html" class="el_package">pt.isec.angelopaiva.jogo.utils</a> &gt; <span class="el_source">UtilsFiles.java</span></div><h1>UtilsFiles.java</h1><pre class="source lang-java linenums">package pt.isec.angelopaiva.jogo.utils;
+
+import pt.isec.angelopaiva.jogo.logica.JogoManager;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+public class UtilsFiles {
+    public static final String REPLAY_PATH = &quot;replays/&quot;;
+    private static final int NR_REPLAYS = 5;
+    public static final String SAVES_PATH = &quot;saves/&quot;;
+
+    private UtilsFiles() {}
+
+    public static void prepareDirectories() {
+<span class="nc" id="L22">        File file = new File(SAVES_PATH);</span>
+
+<span class="nc bnc" id="L24" title="All 2 branches missed.">        if (!file.exists()) file.mkdirs();</span>
+
+<span class="nc" id="L26">        file = new File(REPLAY_PATH);</span>
+
+<span class="nc bnc" id="L28" title="All 2 branches missed.">        if (!file.exists()) file.mkdirs();</span>
+<span class="nc" id="L29">    }</span>
+
+    public static void saveGameToSaveFile(JogoManager o, String fileName) {
+<span class="nc" id="L32">        File file = new File(SAVES_PATH);</span>
+<span class="nc" id="L33">        file.mkdirs();</span>
+
+<span class="nc" id="L35">        saveJogoManagerToFile(o, SAVES_PATH + fileName + &quot;.save&quot;);</span>
+<span class="nc" id="L36">    }</span>
+
+    public static void saveGameToReplayFile(JogoManager o) {
+<span class="nc" id="L39">        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(&quot;ddMMyyyy-HHmmss&quot;);</span>
+<span class="nc" id="L40">        Date date = new Date(System.currentTimeMillis());</span>
+<span class="nc" id="L41">        String dateStr = simpleDateFormat.format(date);</span>
+
+<span class="nc" id="L43">        File file = new File(REPLAY_PATH);</span>
+<span class="nc" id="L44">        file.mkdirs();</span>
+
+<span class="nc" id="L46">        saveJogoManagerToFile(o, REPLAY_PATH + dateStr + &quot;.rsave&quot;);</span>
+<span class="nc" id="L47">    }</span>
+
+    public static void saveJogoManagerToFile(JogoManager jogoManager, File file) {
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if (file == null) return;</span>
+
+        try (
+<span class="nc" id="L53">            FileOutputStream fileOutputStream = new FileOutputStream(file, false);</span>
+<span class="nc" id="L54">            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)</span>
+        ) {
+<span class="nc" id="L56">            objectOutputStream.writeObject(jogoManager);</span>
+<span class="nc" id="L57">        } catch (IOException e) {</span>
+<span class="nc" id="L58">            e.printStackTrace();</span>
+<span class="nc" id="L59">        }</span>
+<span class="nc" id="L60">    }</span>
+
+    private static void saveJogoManagerToFile(JogoManager jogoManager, String filePath) {
+<span class="nc" id="L63">        File file = new File(filePath);</span>
+
+        try {
+<span class="nc" id="L66">            file.createNewFile();</span>
+<span class="nc" id="L67">        } catch (IOException e) {</span>
+<span class="nc" id="L68">            e.printStackTrace();</span>
+<span class="nc" id="L69">        }</span>
+
+        try (
+<span class="nc" id="L72">            FileOutputStream fileOutputStream = new FileOutputStream(file, false);</span>
+<span class="nc" id="L73">            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)</span>
+        ) {
+<span class="nc" id="L75">            objectOutputStream.writeObject(jogoManager);</span>
+<span class="nc" id="L76">        } catch (IOException e) {</span>
+<span class="nc" id="L77">            e.printStackTrace();</span>
+<span class="nc" id="L78">        }</span>
+<span class="nc" id="L79">    }</span>
+
+<span class="nc" id="L81">    public static JogoManager loadReplayFromFile(String fileName) { return loadJogoManagerFromFile(REPLAY_PATH + fileName); }</span>
+
+<span class="nc" id="L83">    public static JogoManager loadSaveFromFile(String fileName) { return loadJogoManagerFromFile(SAVES_PATH + fileName); }</span>
+
+    private static JogoManager loadJogoManagerFromFile(String filePath) {
+<span class="nc" id="L86">        File file = new File(filePath);</span>
+
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (!file.exists()) return null;</span>
+
+<span class="nc" id="L90">        return loadJogoManagerFromFile(file);</span>
+    }
+
+    public static JogoManager loadJogoManagerFromFile(File file) {
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (file == null) return null;</span>
+
+<span class="nc" id="L96">        Object o = null;</span>
+
+        try (
+<span class="nc" id="L99">                FileInputStream fileInputStream = new FileInputStream(file);</span>
+<span class="nc" id="L100">                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);</span>
+        ) {
+
+<span class="nc" id="L103">            o = objectInputStream.readObject();</span>
+<span class="nc" id="L104">        } catch (IOException | ClassNotFoundException e) {</span>
+<span class="nc" id="L105">            e.printStackTrace();</span>
+<span class="nc" id="L106">        }</span>
+
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        if (o == null) return null;</span>
+
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (!(o instanceof JogoManager)) return null;</span>
+
+<span class="nc" id="L112">        return (JogoManager) o;</span>
+    }
+
+    public static void updateReplayList() {
+<span class="nc" id="L116">        File folder = new File(REPLAY_PATH);</span>
+
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        if (!folder.exists()) return;</span>
+
+<span class="nc" id="L120">        String[] fileNames = folder.list();</span>
+
+<span class="nc bnc" id="L122" title="All 4 branches missed.">        if (fileNames == null || fileNames.length == 0) return;</span>
+
+<span class="nc" id="L124">        ArrayList&lt;String&gt; replays = new ArrayList&lt;&gt;(Arrays.asList(fileNames));</span>
+
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        while (replays.size() &gt; NR_REPLAYS) {</span>
+<span class="nc" id="L127">            String olderName = replays.get(0);</span>
+<span class="nc" id="L128">            long olderDate = new File(REPLAY_PATH + replays.get(0)).lastModified();</span>
+
+<span class="nc bnc" id="L130" title="All 2 branches missed.">            for (String fileName : replays) {</span>
+<span class="nc" id="L131">                File file = new File(REPLAY_PATH + fileName);</span>
+
+<span class="nc bnc" id="L133" title="All 2 branches missed.">                if (file.lastModified() &lt; olderDate) {</span>
+<span class="nc" id="L134">                    olderDate = file.lastModified();</span>
+<span class="nc" id="L135">                    olderName = fileName;</span>
+                }
+<span class="nc" id="L137">            }</span>
+
+            try {
+<span class="nc" id="L140">                Files.delete(Path.of(REPLAY_PATH + olderName));</span>
+<span class="nc" id="L141">            } catch (IOException e) {</span>
+<span class="nc" id="L142">                e.printStackTrace();</span>
+<span class="nc" id="L143">            }</span>
+
+<span class="nc" id="L145">            replays.remove(olderName);</span>
+<span class="nc" id="L146">        }</span>
+<span class="nc" id="L147">    }</span>
+
+<span class="nc" id="L149">    public static List&lt;String&gt; getReplays() { return getPathList(REPLAY_PATH); }</span>
+
+<span class="nc" id="L151">    public static List&lt;String&gt; getSaves() { return getPathList(SAVES_PATH); }</span>
+
+    private static List&lt;String&gt; getPathList(String dirPath) {
+<span class="nc" id="L154">        File file = new File(dirPath);</span>
+
+<span class="nc bnc" id="L156" title="All 2 branches missed.">        if (!file.exists()) return new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L158">        String[] fileNames = file.list();</span>
+
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        if (fileNames == null) return new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L162">        return new ArrayList&lt;&gt;(Arrays.asList(fileNames));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
