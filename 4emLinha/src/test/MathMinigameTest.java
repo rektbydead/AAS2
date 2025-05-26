@@ -36,16 +36,6 @@ public class MathMinigameTest {
         }
     }
 
-    private boolean getFinishedFlag(MathMinigame minigame) {
-        try {
-            var field = MathMinigame.class.getSuperclass().getDeclaredField("finished");
-            field.setAccessible(true);
-            return (boolean) field.get(minigame);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private int getMaxSecond(MathMinigame minigame) {
         try {
             var field = MathMinigame.class.getDeclaredField("MAX_SECONDS");
