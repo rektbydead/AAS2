@@ -158,4 +158,33 @@ public class MathMinigameTest {
 
         assertTrue(minigame.isFinished());
     }
+
+    @Test
+    public void testMathMinigameHasWon() {
+        for (int i = 0; i < getRequiredNrRightAnswer(minigame); i++) {
+            String question = minigame.getQuestion();
+            double solution = getLastSolution(minigame);
+            String solutionAsString = decimalFormat.format(solution);
+            minigame.setAnswer(solutionAsString);
+        }
+
+        assertTrue(minigame.hasWon());
+    }
+
+    @Test
+    public void testMathMinigameHasWonFailedBecauseTimeout() throws InterruptedException {
+        for (int i = 0; i < getRequiredNrRightAnswer(minigame); i++) {
+            if (i == getRequiredNrRightAnswer(minigame) - 1) {
+                int secondsTimeOut = getMaxSecond(minigame) + 2;
+                Thread.sleep(Duration.ofSeconds(secondsTimeOut));
+            }
+
+            String question = minigame.getQuestion();
+            double solution = getLastSolution(minigame);
+            String solutionAsString = decimalFormat.format(solution);
+            minigame.setAnswer(solutionAsString);
+        }
+
+        assertFalse(minigame.hasWon());
+    }
 }
