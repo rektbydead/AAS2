@@ -3,39 +3,31 @@ package pt.isec.angelopaiva.jogo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pt.isec.angelopaiva.jogo.logica.dados.minigames.MathMinigame;
+import pt.isec.angelopaiva.jogo.logica.dados.minigames.TypingMinigame;
 
 import java.text.DecimalFormat;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TypingMinigameTest {
 
     /*
-    * Data flow testing on math minigame setAnswer
+    * Data flow testing on typing minigame setAnswer
     */
-    private static final DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
-    private MathMinigame minigame;
+    private TypingMinigame minigame;
 
     @BeforeEach
     void setUp() {
-        minigame = new MathMinigame();
+        minigame = new TypingMinigame();
     }
 
-    private double getLastSolution(MathMinigame minigame) {
+    private int getMaxSecond(TypingMinigame minigame) {
         try {
-            var field = MathMinigame.class.getDeclaredField("lastSolution");
-            field.setAccessible(true);
-            return (double) field.get(minigame);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private int getMaxSecond(MathMinigame minigame) {
-        try {
-            var field = MathMinigame.class.getDeclaredField("MAX_SECONDS");
+            var field = TypingMinigame.class.getSuperclass().getDeclaredField("maxSeconds");
             field.setAccessible(true);
             return (int) field.get(minigame);
         } catch (Exception e) {
@@ -43,134 +35,115 @@ public class TypingMinigameTest {
         }
     }
 
-    private int getNrRightAnswers(MathMinigame minigame) {
+    private String[] getLastSolution(TypingMinigame minigame) {
         try {
-            var field = MathMinigame.class.getDeclaredField("nrRightAnswers");
+            var field = TypingMinigame.class.getDeclaredField("solutions");
             field.setAccessible(true);
-            return (int) field.get(minigame);
+            return (String[]) field.get(minigame);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private int getRequiredNrRightAnswer(MathMinigame minigame) {
-        try {
-            var field = MathMinigame.class.getDeclaredField("REQUIRED_NR_RIGHT_ANSWERS");
-            field.setAccessible(true);
-            return (int) field.get(minigame);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    private String buildCorrectAnswer(String[] solutions) {
+        return String.join(" ", solutions);
     }
 
     @Test
-    public void testMathMinigameCorrectAnswer() {
+    public void testTypingMinigameHasWon() {
         String question = minigame.getQuestion();
-        double solution = getLastSolution(minigame);
-
-        String solutionAsString = decimalFormat.format(solution);
-        minigame.setAnswer(solutionAsString);
-
-        int nrRightAnswers = getNrRightAnswers(minigame);
-        assertEquals(1, nrRightAnswers);
-    }
-
-    @Test
-    public void testMathMinigameWrongAnswer() {
-        String question = minigame.getQuestion();
-        double wrongSolution = getLastSolution(minigame) + 10; // guarantee wrong answer
-
-        String wrongSolutionAsString = decimalFormat.format(wrongSolution);
-        minigame.setAnswer(wrongSolutionAsString);
-
-        int nrRightAnswers = getNrRightAnswers(minigame);
-        assertEquals(0, nrRightAnswers);
-    }
-
-    @Test
-    public void testMathMinigameInvalidAnswer() {
-        String question = minigame.getQuestion();
-        minigame.setAnswer("abc");
-        int nrRightAnswers = getNrRightAnswers(minigame);
-        assertEquals(0, nrRightAnswers);
-    }
-
-    @Test
-    public void testMathMinigameEmptyAnswer() {
-        String question = minigame.getQuestion();
-        minigame.setAnswer("");
-        int nrRightAnswers = getNrRightAnswers(minigame);
-        assertEquals(0, nrRightAnswers);
-    }
-
-    @Test
-    public void testMathMinigameNullAnswer() {
-        String question = minigame.getQuestion();
-        minigame.setAnswer(null);
-        int nrRightAnswers = getNrRightAnswers(minigame);
-        assertEquals(0, nrRightAnswers);
-    }
-
-    @Test
-    public void testMathMinigameFinishedRequiredRightAnswerAchieved() {
-        for (int i = 0; i < getRequiredNrRightAnswer(minigame); i++) {
-            String question = minigame.getQuestion();
-            double solution = getLastSolution(minigame);
-            String solutionAsString = decimalFormat.format(solution);
-            minigame.setAnswer(solutionAsString);
-        }
-
-        assertTrue(minigame.isFinished());
-    }
-
-    @Test
-    public void testMathMinigameFinishedOnlyOneAnswer() {
-        String question = minigame.getQuestion();
-        double solution = getLastSolution(minigame);
-        String solutionAsString = decimalFormat.format(solution);
-        minigame.setAnswer(solutionAsString);
-
-        assertFalse(minigame.isFinished());
-    }
-
-    @Test
-    public void testMathMinigameFinishedBecauseTimeout() throws InterruptedException {
-        int secondsTimeOut = getMaxSecond(minigame) + 2;
-        Thread.sleep(Duration.ofSeconds(secondsTimeOut));
-
-        String question = minigame.getQuestion();
-        double solution = getLastSolution(minigame);
-        String solutionAsString = decimalFormat.format(solution);
-        minigame.setAnswer(solutionAsString);
-
-        assertTrue(minigame.isFinished());
-    }
-
-    @Test
-    public void testMathMinigameHasWon() {
-        for (int i = 0; i < getRequiredNrRightAnswer(minigame); i++) {
-            String question = minigame.getQuestion();
-            double solution = getLastSolution(minigame);
-            String solutionAsString = decimalFormat.format(solution);
-            minigame.setAnswer(solutionAsString);
-        }
+        String correctAnswer = buildCorrectAnswer(getLastSolution(minigame));
+        minigame.setAnswer(correctAnswer);
 
         assertTrue(minigame.hasWon());
     }
 
     @Test
-    public void testMathMinigameHasWonFailedBecauseTimeout() throws InterruptedException {
-        for (int i = 0; i < getRequiredNrRightAnswer(minigame); i++) {
-            if (i == getRequiredNrRightAnswer(minigame) - 1) {
-                int secondsTimeOut = getMaxSecond(minigame) + 2;
-                Thread.sleep(Duration.ofSeconds(secondsTimeOut));
-            }
+    public void testTypingMinigameWrongAnswer() {
+        String question = minigame.getQuestion();
+        minigame.setAnswer("WRONG WORDS TESTING");
 
-            String question = minigame.getQuestion();
-            double solution = getLastSolution(minigame);
-            String solutionAsString = decimalFormat.format(solution);
-            minigame.setAnswer(solutionAsString);
+        assertFalse(minigame.hasWon());
+    }
+
+    @Test
+    public void testTypingMinigameBlankAnswer() {
+        minigame.getQuestion();
+        minigame.setAnswer("");
+
+        assertFalse(minigame.hasWon());
+    }
+
+    @Test
+    public void testTypingMinigameIncorrectAnswerFinish() {
+        minigame.getQuestion();
+        minigame.setAnswer("WRONG WORDS TESTING");
+
+        assertFalse(minigame.hasWon());
+        assertTrue(minigame.isFinished());
+    }
+
+    @Test
+    public void testTypingMinigameCorrectAnswerFinish() {
+        minigame.getQuestion();
+        String correctAnswer = buildCorrectAnswer(getLastSolution(minigame));
+        minigame.setAnswer(correctAnswer);
+
+        assertTrue(minigame.hasWon());
+        assertTrue(minigame.isFinished());
+    }
+
+    @Test
+    public void testTypingMinigameNullAnswer() {
+        minigame.getQuestion();
+        minigame.setAnswer(null);
+
+        assertFalse(minigame.hasWon());
+    }
+
+    @Test
+    public void testTypingMinigameTokenMismatchOrder() {
+        minigame.getQuestion();
+        String[] correctAnswer = getLastSolution(minigame);
+
+        String input = "";
+        for (int i = correctAnswer.length - 1; i >= 0; i--) {
+            input += correctAnswer[i] + " ";
         }
+
+        minigame.setAnswer(input);
+        assertFalse(minigame.hasWon());
+    }
+
+    /*
+     * This test fails because the program is not checking the size of the answer.
+     * If I only write 4 of the 5 words, it ignores the last one.
+    */
+    @Test
+    public void testTypingMinigameIncompleteAnswer() {
+        minigame.getQuestion();
+        String[] solutions = getLastSolution(minigame);
+
+        String partialAnswer = "";
+        for (int i = 0; i < solutions.length - 1; i++) {
+            partialAnswer += solutions[i] + " ";
+        }
+
+        minigame.setAnswer(partialAnswer);
+        assertFalse(minigame.hasWon());
+    }
+
+    /*
+     * This test fails because the program is not checking if the timeout has passed.
+     */
+    @Test
+    public void testTypingMinigameCorrectAnswerTimeout() throws InterruptedException {
+        minigame.getQuestion();
+
+        Thread.sleep(getMaxSecond(minigame) * 1000L);
+
+        String correctAnswer = buildCorrectAnswer(getLastSolution(minigame));
+        minigame.setAnswer(correctAnswer);
 
         assertFalse(minigame.hasWon());
     }
