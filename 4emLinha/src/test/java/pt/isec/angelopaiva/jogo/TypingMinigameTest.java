@@ -7,8 +7,6 @@ import pt.isec.angelopaiva.jogo.logica.dados.minigames.TypingMinigame;
 
 import java.text.DecimalFormat;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
