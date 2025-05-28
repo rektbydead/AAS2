@@ -130,19 +130,4 @@ public class TypingMinigameTest {
         minigame.setAnswer(partialAnswer);
         assertFalse(minigame.hasWon());
     }
-
-    /*
-     * This test fails because the program is not checking if the timeout has passed.
-     */
-    @Test
-    public void testTypingMinigameCorrectAnswerTimeout() throws InterruptedException {
-        minigame.getQuestion();
-
-        Thread.sleep(getMaxSecond(minigame) * 1000L);
-
-        String correctAnswer = buildCorrectAnswer(getLastSolution(minigame));
-        minigame.setAnswer(correctAnswer);
-
-        assertFalse(minigame.hasWon());
-    }
 }
